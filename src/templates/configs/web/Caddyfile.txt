@@ -1,0 +1,57 @@
+{
+        admin off
+        acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# Profile: https://github.com/rsmudge/Malleable-C2-Profiles/blob/master/normal/webbug_getonly.profile
+# User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.39 Safari/537.36 Brave/75
+
+EDGE_DOMAIN_NAME {
+    log
+
+    @user-agent-whitelist {
+        header User-Agent *3770.39*
+    }
+
+    header {
+                -Server
+                +X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"
+                +X-Content-Type-Options "nosniff"
+    }
+
+	handle /_init.gif* {
+		reverse_proxy @user-agent-whitelist https://192.168.100.110 {
+			transport http {
+                        	tls_insecure_skip_verify
+                	}
+		}
+	}
+
+	handle /__init.gif* {
+		reverse_proxy @user-agent-whitelist https://192.168.100.110 {
+			transport http {
+                        	tls_insecure_skip_verify
+                	}
+		}
+	}
+
+	handle /__utm.gif* {
+		reverse_proxy @user-agent-whitelist https://192.168.100.110 {
+			transport http {
+                        	tls_insecure_skip_verify
+                	}
+		}
+	}
+
+	handle /___utm.gif* {
+		reverse_proxy @user-agent-whitelist https://192.168.100.110 {
+			transport http {
+                        	tls_insecure_skip_verify
+                	}
+		}
+	}
+
+	handle /* {
+                redir https://docs.microsoft.com/en-us/windows/win32/debug/pe-format permanent
+	}
+}
